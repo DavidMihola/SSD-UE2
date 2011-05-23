@@ -4,6 +4,7 @@
  */
 
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 import org.xml.sax.InputSource;
 
@@ -48,8 +49,10 @@ public class Beispiel3 {
     private void sax(String memoryXML, String filteredMemoryXML)
             throws Exception {
 	
+	XMLReader parser = XMLReaderFactory.createXMLReader();
+
 	InputSource inpSrc = new InputSource(memoryXML);
-	SAXSource saxSrc = new SAXSource(inpSrc);
+	SAXSource saxSrc = new SAXSource(parser, inpSrc);
 	StreamResult strRes = new StreamResult(filteredMemoryXML);
 
 	TransformerFactory factory = TransformerFactory.newInstance();

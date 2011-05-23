@@ -1,0 +1,60 @@
+*** Geben Sie alle SpielerInnen aus, die bereits mehr als ein Kartenpaar aufgedeckt haben.
+
+//mem:player[count(mem:uncovered-pairs/mem:pair) gt 1]
+
+*** Geben Sie alle Karten aus, die mindestens einmal aufgedeckt wurden und nicht aus Reihe 2 sind.
+
+//mem:card[@uncover-count ge "1"][@row ne "2"]
+
+*** Selektieren Sie alle Knoten im Namespace "http://www.dbai.tuwien.ac.at/education/ssd/SS11/
+uebung/Memory". Beachten Sie dabei, dass der Präfix für einen Namespace nicht immer gleich 
+lauten muss.
+
+//*[namespace-uri() = "http://www.dbai.tuwien.ac.at/education/ssd/SS11/uebung/Memory"]
+
+*** Selektieren Sie die zweite Karte aus Spalte 3.
+
+//mem:card[@row eq "3"][2]
+//mem:card[@row eq "3"][position() = 2]
+
+*** Selektieren Sie die zweite Karte, falls diese aus Spalte 3 ist.
+
+//mem:card[2][@row eq "3"]
+//mem:card[@row eq "3" and position() = 2]
+
+*** Geben Sie die Karten aus, die am häufigsten aufgedeckt wurden. Für Karten bei denen das Attribut "uncover-count" nicht angegeben wurde, soll 0 als Wert für die Anzahl der Aufdeckungen angenommen werden.
+
+??? //mem:card[@uncover-count = max(//mem:card/@uncover-count)]
+Das liefert in der Test-Datei das richtige Ergebnis? Aber was soll der Hinweis mit Default-
+Wert 0...?
+
+*** Ermitteln Sie wie oft die Karten aus Reihe 0 im Schnitt aufgedeckt wurden. Für Karten bei denen das Attribut "uncover-count" nicht angegeben wurde, soll 0 als Wert für die Anzahl der Aufdeckungen angenommen werden.
+
+sum(//mem:card[@row =  "0"]/@uncover-count) div count(//mem:card[@row = "0"])
+
+avg geht hier nicht, weil sonst offenbar die beiden Karten ohne uncover-count-Attribut
+nicht betrachtet werden (anstatt als 0 einzufließen).
+
+*** Geben Sie alle SpielerInnen aus, die bisher noch keine Karte aufgedeckt haben, welche derzeit im Zustand "UNCOVERED" ist. Beachten Sie dabei, dass auch der Wert 1 diesem Zustand entspricht.
+
+//mem:player[not(./mem:uncovered-pairs/mem:pair/@*[name() eq "card1" or name() eq "card2"] = //mem:card[@current-state eq "UNCOVERED" or @current-state eq "1"]/@key)]
+
+zur Kontrolle:
+
+//mem:card[@current-state eq "UNCOVERED" or @current-state eq "1"]/@key
+
+ergibt:
+
+"c1_0_0", "c6_1_1", "c6_1_2", "c7_3_2", "c7_1_3"
+
+p1 hat bisher aufgedeckt:
+
+"c5_2_0", "c6_1_1", "c6_1_2", "c7_3_2", "c7_1_3", "c2_3_3" 
+
+p2:
+
+"c5_2_0", "c8_2_3" 
+
+*** Selektieren Sie alle Karten, die SpielerIn "p1" bereits aufgedeckt hat.
+
+//mem:card[@key = //mem:player[@name eq "p1"]/mem:uncovered-pairs/mem:pair/@*[name() eq "card1" or name() eq "card2"]]

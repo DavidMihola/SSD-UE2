@@ -14,6 +14,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.xml.sax.helpers.XMLFilterImpl;
+
 
 public class Beispiel3 {
     public static void main(String[] args) throws Exception {
@@ -38,6 +40,9 @@ public class Beispiel3 {
     private Beispiel3() throws Exception {
     }
 
+	class MyFilter extends XMLFilterImpl {
+		
+	}
     /**
      * Vervollstaendigen Sie die Methode. Der Name des XML-Files, welches
      * verarbeitet werden soll, wird mittels Parameter "memoryXML" uebergeben.
@@ -51,8 +56,11 @@ public class Beispiel3 {
 	
 	XMLReader parser = XMLReaderFactory.createXMLReader();
 
+	MyFilter filter = new MyFilter();
+	filter.setParent(parser);
+
 	InputSource inpSrc = new InputSource(memoryXML);
-	SAXSource saxSrc = new SAXSource(parser, inpSrc);
+	SAXSource saxSrc = new SAXSource(filter, inpSrc);
 	StreamResult strRes = new StreamResult(filteredMemoryXML);
 
 	TransformerFactory factory = TransformerFactory.newInstance();

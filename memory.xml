@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mem:game
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:mem="http://www.dbai.tuwien.ac.at/education/ssd/SS11/uebung/Memory"
+
+    current-player="p2" current-turn-started="500023" current-card1="c1_0_0"
+    current-state="CARD1" game-started="2011-02-14">
+
+    <mem:table>
+        <mem:card key="c1_0_0" current-state="UNCOVERED" id="c1" column="0"
+            row="0" uncover-count="1"/>
+        <mem:card key="c3_1_0" current-state="0" id="c3" column="1" row="0"/>
+        <mem:card key="c5_2_0" current-state="COVERED" id="c5" column="2"
+            row="0" uncover-count="2"/>
+        <mem:card key="c4_3_0" current-state="0" id="c4" column="3" row="0"/>
+
+        <mem:card key="c2_0_1" current-state="0" id="c2" column="0" row="1"/>
+        <mem:card key="c6_1_1" current-state="1" id="c6" column="1" row="1"
+            uncover-count="1"/>
+        <mem:card key="c1_2_1" current-state="0" id="c1" column="2" row="1"/>
+        <mem:card key="c4_3_1" current-state="0" id="c4" column="3" row="1"/>
+
+        <mem:card key="c3_0_2" current-state="0" id="c3" column="0" row="2"/>
+        <mem:card key="c6_1_2" current-state="1" id="c6" column="1" row="2"
+            uncover-count="1"/>
+        <mem:card key="c5_2_2" current-state="0" id="c5" column="2" row="2"/>
+        <mem:card key="c7_3_2" current-state="1" id="c7" column="3" row="2"
+            uncover-count="1"/>
+
+        <mem:card key="c8_0_3" current-state="0" id="c8" column="0" row="3"/>
+        <mem:card key="c7_1_3" current-state="1" id="c7" column="1" row="3"
+            uncover-count="1"/>
+        <mem:card key="c8_2_3" current-state="0" id="c8" column="2" row="3"
+            uncover-count="1"/>
+        <mem:card key="c2_3_3" current-state="0" id="c2" column="3" row="3"
+            uncover-count="1"/>
+    </mem:table>
+
+    <mem:covered-pairs>
+        <mem:pair card1="c1_0_0" card2="c1_2_1" is-match="true"/>
+        <mem:pair card1="c2_0_1" card2="c2_3_3" is-match="true"/>
+        <mem:pair card1="c3_0_2" card2="c3_1_0" is-match="true"/>
+        <mem:pair card1="c4_3_0" card2="c4_3_1" is-match="true"/>
+        <mem:pair card1="c5_2_2" card2="c5_2_0" is-match="true"/>
+        <mem:pair card1="c8_0_3" card2="c8_2_3" is-match="true"/>
+    </mem:covered-pairs>
+
+    <mem:uncovered-pairs>
+        <mem:pair card1="c7_1_3" card2="c7_3_2" is-match="true"/>
+        <mem:pair card1="c6_1_2" card2="c6_1_1" is-match="true"/>
+    </mem:uncovered-pairs>
+
+    <mem:players>
+        <mem:player name="p1" spent-time="12012">
+            <mem:player-description>
+                Hello!
+
+                My name is Max Mustermann and my birthday is on:
+                <mem:date>1980-03-13</mem:date>. I am registered here since:
+                <mem:date>2011-01-03</mem:date>
+            </mem:player-description>
+
+            <mem:uncovered-pairs>
+                <mem:pair card1="c7_1_3" card2="c7_3_2" is-match="true"/>
+                <mem:pair card1="c6_1_2" card2="c6_1_1" is-match="true"/>
+                <mem:pair card1="c5_2_0" card2="c2_3_3"/>
+            </mem:uncovered-pairs>
+        </mem:player>
+
+        <mem:player name="p2" spent-time="23542">
+            <mem:uncovered-pairs>
+                <mem:pair card1="c5_2_0" card2="c8_2_3"/>
+            </mem:uncovered-pairs>
+        </mem:player>
+    </mem:players>    
+
+</mem:game>

@@ -3,10 +3,14 @@
  * Uebungsbeispiel 3
  */
 
+import org.xml.sax.SAXException;
+
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import org.xml.sax.InputSource;
+
+import org.xml.sax.Attributes;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -41,7 +45,59 @@ public class Beispiel3 {
     }
 
 	class MyFilter extends XMLFilterImpl {
+
+		private boolean deletePairs = false;
+		private boolean insidePlayerElement = false;
+
+		public void startElement(String namespaceUri,
+					 String localName,
+                        		 String qualifiedName,
+					 Attributes attributes)
+                         		 throws SAXException {
+			boolean showTag = true;
+
+			if (localName.equals("player")) {
+				insidePlayerElement = true;
+			} else if (localName.equals("uncovered-pairs") && !insidePlayerElement) {
+				deletePairs = true;				
+				showTag = false;
+			} else if (localName.equals("covered-pairs")) {
+				deletePairs = true;
+				showTag = false;
+			} else if (localName.equals("pair") && deletePairs) {
+				showTag = false;
+			}
+			
+			if (showTag) {
+				super.startElement(namespaceUri, localName,
+						   qualifiedName, attributes);
+			}
+		}
+
+		public void endElement(String namespaceUri,
+		                       String localName,
+		                       String qualifiedName)
+			               throws SAXException {
+			boolean showTag = true;
+
+			if (localName.equals("player")) {
+				insidePlayerElement = false;
+			} else if (localName.equals("uncovered-pairs") && !insidePlayerElement) {
+				deletePairs = false;
+				showTag = false;
+			} else if (localName.equals("covered-pairs")) {
+				deletePairs = false;
+				showTag = false;
+			} else if (localName.equals("pair") && deletePairs) {
+				showTag = false;
+			}
+
+			if (showTag) {
+				super.endElement(namespaceUri, localName,
+						 qualifiedName);
+			}
 		
+		}		
 	}
     /**
      * Vervollstaendigen Sie die Methode. Der Name des XML-Files, welches

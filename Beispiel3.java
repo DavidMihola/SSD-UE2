@@ -2,6 +2,18 @@
  * Semistrukturierte Daten - SS 2011
  * Uebungsbeispiel 3
  */
+
+import org.xml.sax.XMLReader;
+
+import org.xml.sax.InputSource;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+
+import javax.xml.transform.sax.SAXSource;
+import javax.xml.transform.stream.StreamResult;
+
+
 public class Beispiel3 {
     public static void main(String[] args) throws Exception {
         // Argumentueberpruefung
@@ -35,6 +47,16 @@ public class Beispiel3 {
      */
     private void sax(String memoryXML, String filteredMemoryXML)
             throws Exception {
+	
+	InputSource inpSrc = new InputSource(memoryXML);
+	SAXSource saxSrc = new SAXSource(inpSrc);
+	StreamResult strRes = new StreamResult(filteredMemoryXML);
+
+	TransformerFactory factory = TransformerFactory.newInstance();
+	Transformer transformer = factory.newTransformer();
+
+	transformer.transform(saxSrc, strRes);
+
     }
 	
     /**

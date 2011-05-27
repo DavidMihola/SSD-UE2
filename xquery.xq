@@ -1,57 +1,23 @@
 declare namespace mem="http://www.dbai.tuwien.ac.at/education/ssd/SS11/uebung/Memory";
 
-declare function local:game() as element(mem:game)
-{
-	let $p := doc('memory.xml')/mem:game
-	return $p
-};
-
-declare function local:players() as element(mem:player)*
-{
-	let $p := local:game()/mem:players/mem:player
-	return $p
-};
-
-declare function local:cards() as element(mem:card)*
-{
-	let $p := local:game()/mem:table/mem:card
-	return $p
-};
-
-declare function local:cardkeys_for_player($p as element(mem:player)) as xs:string*
-{
-	let $c := distinct-values($p/mem:uncovered-pairs/mem:pair/(@card1 | @card2))
-	return $c
-};
-
-declare function local:cards_for_player($p as element(mem:player)) as element(mem:card)*
-{
-	for $card_key in local:cardkeys_for_player($p)
-	let $card := local:cards()[@key eq $card_key][@column="1"]
-	return $card
-};
-
-declare function local:cardcount_for_player($p as element(mem:player)) as xs:integer
-{
-	let $cards := local:cards_for_player($p)
-	return count($cards)
-};
-
-declare function local:info_for_player($p as element(mem:player)) as element(player)
-{
-	let $q := $p
-	return
-	<player playing-time="{$p/@spent-time}">
-	<name>{$p/@name}</name>
-	<uncovered-count-column1>{local:cardcount_for_player($p)}</uncovered-count-column1>
-	</player>
-
-};
-
-for $p in local:players()
-let $info := local:info_for_player($p)
-where $info/uncovered-count-column1 > 1
-order by $info/uncovered-count-column1 descending, $info/name ascending
-return $info
+(: Die let-Zeile sollte eigentlich ohnehin keine Duplikate ausspucken, da ja für jede Karte geprüft wird,
+ob der Schlüssel mit irgendeinem (@card1 | @card2) aus den aufgedeckten Paaren des Spielers übereinstimmt; auch 
+wenn es mehrere Übereinstimmungen gibt, wird die Karte nur einmal genommen!
+Trotzdem komisch, dass das folgende eine leere Sequenz ergibt:
+    $distinct_cards := distinct-values($cards) :)
 
 
+for $player in doc('memory.xml')/mem:game/mem:players/mem:player
+let $cards := doc('memory.xml')/mem:game/mem:table/mem:card[@column=1][@key = $player/mem:uncovered-pairs/mem:pair/(@card1 | @card2)],
+    (: $distinct_cards := distinct-values($cards), :) (: wieso geht das nicht??? :)
+    $card_count := count($cards)
+where $card_count > 1
+order by $card_count descending, $player/@name ascending
+return
+	element player {
+		attribute playing-time {$player/@spent-time},
+		element name {
+			text {$player/@name }
+		},
+		element uncovered-count-column1 {$card_count}
+	}
